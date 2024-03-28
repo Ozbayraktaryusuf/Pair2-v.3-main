@@ -1,4 +1,4 @@
-package com.turkcell.rentacar.business.dtos.responses.creates.payment;
+package com.turkcell.rentacar.business.dtos.responses.creates;
 
 import com.turkcell.rentacar.entities.concretes.Car;
 import com.turkcell.rentacar.entities.concretes.CorporateCustomer;
@@ -19,5 +19,6 @@ public class CreatedPaymentResponse {
     private int carId;
     private int personalCustomerId;
     private int corporateCustomerId;
+    private int extraServiceId;
     private LocalDateTime createdDate;
 }

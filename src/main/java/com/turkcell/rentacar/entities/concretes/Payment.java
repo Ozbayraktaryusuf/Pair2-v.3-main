@@ -2,6 +2,7 @@ package com.turkcell.rentacar.entities.concretes;
 
 import com.turkcell.rentacar.core.entities.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class Payment extends BaseEntity {
     private String expirationDate;
 
     @Column(name="amounts")
-    private double amount;
+    private double totalAmount=0;
 
     @Column(name="dayOfRent")
     private int dayOfRent;
@@ -43,9 +44,14 @@ public class Payment extends BaseEntity {
     private List<Rental> rental;
 
     @ManyToOne
+    @JoinColumn(name = "extraServiceId")
+    private ExtraServices extraServices;
+
+    @ManyToOne
     @JoinColumn(name = "carId")
     private Car car;
 
+    @Null
     @ManyToOne
     @JoinColumn(name = "personalCustomerId")
     private PersonalCustomer personalCustomer;

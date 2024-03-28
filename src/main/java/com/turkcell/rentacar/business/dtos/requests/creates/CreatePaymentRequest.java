@@ -1,4 +1,4 @@
-package com.turkcell.rentacar.business.dtos.requests.creates.payment;
+package com.turkcell.rentacar.business.dtos.requests.creates;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
@@ -35,11 +35,12 @@ public class CreatePaymentRequest {
 
     @NotNull
     private int dayOfRent;
+
+    private int extraServiceId;
     
     private String nationalNumber;
 
     private String taxIdNumber;
 
-    @NotNull
     private int carId;
 }
