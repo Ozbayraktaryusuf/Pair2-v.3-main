@@ -36,11 +36,15 @@ public class CreatePaymentRequest {
     @NotNull
     private int dayOfRent;
 
+    @Null
     private int extraServiceId;
     
+    @Null
     private String nationalNumber;
 
+    @Null
     private String taxIdNumber;
 
+    @Null
     private int carId;
 }

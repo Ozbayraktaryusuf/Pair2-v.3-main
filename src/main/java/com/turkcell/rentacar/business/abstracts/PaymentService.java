@@ -5,6 +5,7 @@ import com.turkcell.rentacar.business.dtos.responses.creates.CreatedPaymentRespo
 import com.turkcell.rentacar.business.dtos.responses.getAlls.GetAllPaymentResponse;
 import com.turkcell.rentacar.business.dtos.responses.creates.payment.*;
 import com.turkcell.rentacar.business.dtos.responses.getById.GetByIdPaymentResponse;
+import com.turkcell.rentacar.entities.concretes.Payment;
 
 import java.util.List;
 
@@ -15,5 +16,6 @@ public interface PaymentService {
     List<GetAllPaymentResponse> getall();
     GetByIdPaymentResponse getById(int id);
     void delete(int id);
+    Payment getByIdForRental(int id);
 
 }

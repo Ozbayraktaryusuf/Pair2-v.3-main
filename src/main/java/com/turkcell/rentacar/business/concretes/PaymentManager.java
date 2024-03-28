@@ -99,4 +99,12 @@ public class PaymentManager implements PaymentService {
         this.paymentRepository.deleteById(id);
 
     }
+
+    @Override
+    public Payment getByIdForRental(int id) {
+        this.paymentBusinessRules.idIsNotExists(id);
+        Payment payment=this.paymentRepository.findById(id).get();
+        return payment;
+    }
+
 }

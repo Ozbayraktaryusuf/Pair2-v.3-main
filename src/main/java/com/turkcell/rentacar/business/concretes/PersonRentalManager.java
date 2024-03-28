@@ -5,16 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import com.turkcell.rentacar.business.abstracts.*;
 import com.turkcell.rentacar.business.rules.RentalBusinessRules;
+import com.turkcell.rentacar.entities.concretes.Payment;
 import org.springframework.stereotype.Service;
 
-import com.turkcell.rentacar.business.abstracts.BrandService;
-import com.turkcell.rentacar.business.abstracts.CarService;
-import com.turkcell.rentacar.business.abstracts.FuelService;
-import com.turkcell.rentacar.business.abstracts.PersonCustomerService;
 import com.turkcell.rentacar.business.abstracts.RentalforPersonService;
-import com.turkcell.rentacar.business.abstracts.RentalforPersonService;
-import com.turkcell.rentacar.business.abstracts.TransmissionService;
 import com.turkcell.rentacar.business.dtos.requests.creates.CreateRentalforPersonRequest;
 import com.turkcell.rentacar.business.dtos.requests.creates.CreateRentalforPersonRequest;
 import com.turkcell.rentacar.business.dtos.responses.creates.CreateRentalforPersonResponse;
@@ -38,24 +34,27 @@ public class PersonRentalManager implements RentalforPersonService {
 	private CarService carService;
 	private PersonCustomerService personCustomerService;
 	private RentalBusinessRules rentalBusinessRules;
+	private PaymentService paymentService;
 
 	@Override
 	public CreateRentalforPersonResponse startRentalforPersonCustomer(CreateRentalforPersonRequest createRentalforPersonRequest) {
-		rentalBusinessRules.currentlyUnderMaintenance(createRentalforPersonRequest.getCarId());
-		rentalBusinessRules.currentlyRented(createRentalforPersonRequest.getCarId());
-		
+		Payment payment=this.paymentService.getByIdForRental(createRentalforPersonRequest.getPaymentId());
+		rentalBusinessRules.currentlyUnderMaintenance(payment.getCar().getId());
+		rentalBusinessRules.currentlyRented(payment.getCar().getId());
+
 		Rental rental = this.modelMapperService.forRequest().map(createRentalforPersonRequest, Rental.class);
-		Car car = this.carService.getByIdForRental(createRentalforPersonRequest.getCarId());
-		PersonalCustomer personalCustomer = this.personCustomerService.getByIdForPersonRental(createRentalforPersonRequest.getCustomerId());
-		rental.setPersonalCustomer(personalCustomer);
+//		Car car = this.carService.getByIdForRental(createRentalforPersonRequest.getCarId());
+//		PersonalCustomer personalCustomer = this.personCustomerService.getByIdForPersonRental(createRentalforPersonRequest.getCustomerId());
 		rental.setDateSent(LocalDateTime.now());
-		rental.setCar(car);
-		car.setState("Rented");
+		rental.setPayment(payment);
+		rental.setPersonalCustomer(rental.getPayment().getPersonalCustomer());
+		rental.setCar(rental.getPayment().getCar());
+		rental.getCar().setState("Rented");
 		Rental existsRental = this.rentalRepository.save(rental);
 
 		CreateRentalforPersonResponse createRentalResponse = this.modelMapperService.forResponse().map(existsRental,
 				CreateRentalforPersonResponse.class);
-		createRentalResponse.setPersonCustomerId(personalCustomer.getId());
+		createRentalResponse.setPersonCustomerId(rental.getPersonalCustomer().getId());
 		return createRentalResponse;
 
 	}

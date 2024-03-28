@@ -13,6 +13,7 @@ public class CreateRentalforPersonResponse {
     private int id;
 	private int carID;
 	private int personCustomerId;
+    private int paymentId;
     private LocalDateTime dateSent;
     private LocalDateTime dateReturned;
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class CreateRentalforCorporateResponse {
 	private int carID;
 	private int corporateCustomerId;
+    private int paymentId;
     private LocalDateTime dateSent;
     private LocalDateTime dateReturned;
 }

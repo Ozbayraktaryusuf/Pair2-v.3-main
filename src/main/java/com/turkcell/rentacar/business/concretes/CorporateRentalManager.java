@@ -2,16 +2,14 @@ package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.CarService;
 import com.turkcell.rentacar.business.abstracts.CorporateCustomerService;
+import com.turkcell.rentacar.business.abstracts.PaymentService;
 import com.turkcell.rentacar.business.abstracts.RentalForCorporateService;
 import com.turkcell.rentacar.business.dtos.requests.creates.CreateRentalforCorporateRequest;
 import com.turkcell.rentacar.business.dtos.responses.creates.CreateRentalforCorporateResponse;
 import com.turkcell.rentacar.business.dtos.responses.creates.CreateRentalforPersonResponse;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.dataAccess.abstracts.RentalRepository;
-import com.turkcell.rentacar.entities.concretes.Car;
-import com.turkcell.rentacar.entities.concretes.CorporateCustomer;
-import com.turkcell.rentacar.entities.concretes.PersonalCustomer;
-import com.turkcell.rentacar.entities.concretes.Rental;
+import com.turkcell.rentacar.entities.concretes.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,21 +23,25 @@ public class CorporateRentalManager implements RentalForCorporateService {
     private ModelMapperService modelMapperService;
     private CarService carService;
     private CorporateCustomerService corporateCustomerService;
+    private PaymentService paymentService;
+
     //private RentalBusinessRules rentalBusinessRules;
     @Override
     public CreateRentalforCorporateResponse startRentalforCorporateCustomer(CreateRentalforCorporateRequest createRentalforCorporateRequest) {
         Rental rental = this.modelMapperService.forRequest().map(createRentalforCorporateRequest, Rental.class);
-        Car car = this.carService.getByIdForRental(createRentalforCorporateRequest.getCarId());
-        CorporateCustomer corporateCustomer = this.corporateCustomerService.getByIdForCorporateRental(createRentalforCorporateRequest.getCustomerId());
-        rental.setCorporateCustomer(corporateCustomer);
+//        Car car = this.carService.getByIdForRental(createRentalforCorporateRequest.getCarId());
+//        CorporateCustomer corporateCustomer = this.corporateCustomerService.getByIdForCorporateRental(createRentalforCorporateRequest.getCustomerId());
+        Payment payment=this.paymentService.getByIdForRental(createRentalforCorporateRequest.getPaymentId());
         rental.setDateSent(LocalDateTime.now());
-        rental.setCar(car);
-        car.setState("Rented");
+        rental.setPayment(payment);
+        rental.setCorporateCustomer(rental.getPayment().getCorporateCustomer());
+        rental.setCar(rental.getPayment().getCar());
+        rental.getCar().setState("Rented");
         Rental existsRental = this.rentalRepository.save(rental);
 
         CreateRentalforCorporateResponse createRentalforCorporateResponse = this.modelMapperService.forResponse().map(existsRental,
                 CreateRentalforCorporateResponse.class);
-        createRentalforCorporateResponse.setCorporateCustomerId(corporateCustomer.getId());
+        createRentalforCorporateResponse.setCorporateCustomerId(rental.getCorporateCustomer().getId());
         return createRentalforCorporateResponse;
 
     }

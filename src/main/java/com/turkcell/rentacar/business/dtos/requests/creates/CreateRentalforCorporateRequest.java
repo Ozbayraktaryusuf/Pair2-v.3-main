@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 public class CreateRentalforCorporateRequest {
 	
+//	@NotNull
+//	private int carId;
+//	@NotNull
+//	private int customerId;
 	@NotNull
-	private int carId;
-	@NotNull
-	private int customerId;
+	private int paymentId;
 }
