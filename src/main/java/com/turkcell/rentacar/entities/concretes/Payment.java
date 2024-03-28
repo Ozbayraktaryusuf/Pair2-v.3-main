@@ -51,7 +51,6 @@ public class Payment extends BaseEntity {
     @JoinColumn(name = "carId")
     private Car car;
 
-    @Null
     @ManyToOne
     @JoinColumn(name = "personalCustomerId")
     private PersonalCustomer personalCustomer;
